@@ -441,18 +441,24 @@ fun PdfRendererPage(
     isDarkReader: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var pageBitmap by remember(filePath, pageIndex, isDarkReader) { mutableStateOf<Bitmap?>(null) }
+    var pageBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
     LaunchedEffect(filePath, pageIndex, isDarkReader) {
+        val oldBitmap = pageBitmap
+        pageBitmap = null
+        oldBitmap?.recycle()
+
         withContext(Dispatchers.IO) {
+            var pfd: ParcelFileDescriptor? = null
+            var renderer: PdfRenderer? = null
+            var page: PdfRenderer.Page? = null
             try {
                 val file = File(filePath)
-                val pfd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
-                val renderer = PdfRenderer(pfd)
+                pfd = ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
+                renderer = PdfRenderer(pfd)
                 if (pageIndex < renderer.pageCount) {
-                    val page = renderer.openPage(pageIndex)
+                    page = renderer.openPage(pageIndex)
 
-                    // Standard high scale density rendering
                     val scale = 2
                     val width = page.width * scale
                     val height = page.height * scale
@@ -469,10 +475,10 @@ fun PdfRendererPage(
                     if (isDarkReader) {
                         val paint = android.graphics.Paint()
                         val matrix = android.graphics.ColorMatrix(floatArrayOf(
-                            -1.0f, 0.0f, 0.0f, 0.0f, 255.0f, // Red
-                            0.0f, -1.0f, 0.0f, 0.0f, 255.0f, // Green
-                            0.0f, 0.0f, -1.0f, 0.0f, 255.0f, // Blue
-                            0.0f, 0.0f, 0.0f, 1.0f, 0.0f     // Alpha
+                            -1.0f,  0.0f,  0.0f, 0.0f, 255.0f, // Red
+                             0.0f, -1.0f,  0.0f, 0.0f, 255.0f, // Green
+                             0.0f,  0.0f, -1.0f, 0.0f, 255.0f, // Blue
+                             0.0f,  0.0f,  0.0f, 1.0f, 0.0f     // Alpha
                         ))
                         paint.colorFilter = android.graphics.ColorMatrixColorFilter(matrix)
 
@@ -480,18 +486,26 @@ fun PdfRendererPage(
                         val invCanvas = android.graphics.Canvas(invertedBitmap)
                         invCanvas.drawBitmap(bitmap, 0f, 0f, paint)
 
+                        bitmap.recycle() // Recycle intermediate white bitmap immediately
                         pageBitmap = invertedBitmap
                     } else {
                         pageBitmap = bitmap
                     }
-
-                    page.close()
                 }
-                renderer.close()
-                pfd.close()
             } catch (e: Exception) {
                 e.printStackTrace()
+            } finally {
+                try { page?.close() } catch (ignored: Exception) {}
+                try { renderer?.close() } catch (ignored: Exception) {}
+                try { pfd?.close() } catch (ignored: Exception) {}
             }
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            pageBitmap?.recycle()
+            pageBitmap = null
         }
     }
 

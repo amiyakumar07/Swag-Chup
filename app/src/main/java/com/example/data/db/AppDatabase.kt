@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.data.model.PdfBookmark
 import com.example.data.model.PdfDocument
 
-@Database(entities = [PdfDocument::class, PdfBookmark::class], version = 1, exportSchema = false)
+@Database(entities = [PdfDocument::class, PdfBookmark::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun pdfDao(): PdfDao
 
