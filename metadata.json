@@ -1,0 +1,6 @@
+{
+  "name": "PDF Tools",
+  "description": "Manage, view, and organize PDF documents, bookmark pages, and add notes using efficient native rendering.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

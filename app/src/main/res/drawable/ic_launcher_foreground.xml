@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Cast soft shadow behind the document representation -->
+    <path
+        android:fillColor="#1F000000"
+        android:pathData="M30,28 h50 v58 h-50 z" />
+        
+    <!-- Main crisp white document body with precise vector geometry -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,24 h38 l18,18 v40 c0,3.3 -2.7,6 -6,6 h-50 c-3.3,0 -6,-2.7 -6,-6 v-52 c0,-3.3 2.7,-6 6,-6 z" />
+
+    <!-- Soft slate inner shading defining the decorative folded corner -->
+    <path
+        android:fillColor="#CFD8DC"
+        android:pathData="M66,24 l18,18 h-12 c-3.3,0 -6,-2.7 -6,-6 z" />
+
+    <!-- Contrast Crimson Red banner representational tag of PDF focus -->
+    <path
+        android:fillColor="#E53935"
+        android:pathData="M34,44 h40 v12 h-40 z" />
+
+    <!-- White text-lines inside the Crimson Red label -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M38,48 h32 v4 h-32 z" />
+
+    <!-- Clean grey layout line vectors representing document body content -->
+    <path
+        android:fillColor="#78909C"
+        android:pathData="M34,64 h40 v3 h-40 z M34,71 h32 v3 h-32 z M34,78 h20 v3 h-20 z" />
+</vector>
